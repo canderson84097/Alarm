@@ -8,17 +8,33 @@
 
 import UIKit
 
+protocol SwitchDelegate: class {
+    func switchValueChanged(cell: SwitchTableViewCell)
+}
+
 class SwitchTableViewCell: UITableViewCell {
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    
+    // MARK: - Outlets
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var alarmSwitch: UISwitch!
+    
+    weak var cellDelegate: SwitchDelegate?
+    
+    // MARK: - Actions
+    @IBAction func switchTurnedOn(_ sender: UISwitch) {
+        cellDelegate?.switchValueChanged(cell: self)
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    
+    func updateViews(with alarm: Alarm) {
+        nameLabel.text = alarm.name
+        timeLabel.text = alarm.fireTimeAsString
+        alarmSwitch.isOn = alarm.isOn
+        self.backgroundColor = alarm.isOn ? .cyan : .red
+        if alarm.isOn != true {
+            nameLabel.textColor = .black
+            timeLabel.textColor = .black
+        }
     }
 
 }
